@@ -1,0 +1,17 @@
+<h2>Staff: Manage Books</h2>
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Title" required>
+    <input type="text" name="author" placeholder="Author" required>
+    <input type="number" step="0.01" name="price" placeholder="Price" required>
+    <input type="number" name="stock" placeholder="Stock" required>
+    <button type="submit">Add Book</button>
+</form>
+
+<hr>
+<h3>Current Inventory</h3>
+<ul>
+{% for book in books %}
+    <li>{{ book.title }} by {{ book.author }} - ${{ book.price }} (Stock: {{ book.stock }})</li>
+{% endfor %}
+</ul>

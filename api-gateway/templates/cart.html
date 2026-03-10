@@ -1,0 +1,20 @@
+<h2>Your Cart (Customer ID: {{ customer_id }})</h2>
+<ul>
+{% for item in items %}
+    <li>Book ID: {{ item.book_id }} | Qty: {{ item.quantity }}</li>
+{% empty %}
+    <li>Your cart is empty.</li>
+{% endfor %}
+</ul>
+
+{% if items %}
+<hr>
+<form method="POST" action="{% url 'create_order' customer_id %}">
+    {% csrf_token %}
+    <input type="hidden" name="total_amount" value="50.00"> <!-- Mock total for now -->
+    <button type="submit">Checkout (Create Order)</button>
+</form>
+{% endif %}
+
+<br>
+<a href="{% url 'book_list' %}">Continue Shopping</a>

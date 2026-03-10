@@ -1,0 +1,170 @@
+services:
+  db:
+    image: mariadb:10.11
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  customer-service:
+    build: ./customer-service
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${CUSTOMER_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  book-service:
+    build: ./book-service
+    ports:
+      - "8002:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${BOOK_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  cart-service:
+    build: ./cart-service
+    ports:
+      - "8003:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${CART_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  staff-service:
+    build: ./staff-service
+    ports:
+      - "8004:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${STAFF_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  manager-service:
+    build: ./manager-service
+    ports:
+      - "8005:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${MANAGER_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  catalog-service:
+    build: ./catalog-service
+    ports:
+      - "8006:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${CATALOG_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "8007:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${ORDER_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  ship-service:
+    build: ./ship-service
+    ports:
+      - "8008:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${SHIP_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  pay-service:
+    build: ./pay-service
+    ports:
+      - "8009:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${PAY_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  comment-rate-service:
+    build: ./comment-rate-service
+    ports:
+      - "8010:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${COMMENT_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  recommender-ai-service:
+    build: ./recommender-ai-service
+    ports:
+      - "8011:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${RECOMMENDER_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=${GATEWAY_DB}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+volumes:
+  mariadb_data:
