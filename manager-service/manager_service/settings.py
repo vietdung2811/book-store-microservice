@@ -48,18 +48,14 @@ WSGI_APPLICATION = 'manager_service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'djongo',
         'NAME': os.environ.get('DB_NAME', 'manager_db'),
-        'USER': os.environ.get('DB_USER', 'bs1'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'zenda2811'),
-        'HOST': os.environ.get('DB_HOST', 'db'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': os.environ.get('MONGO_URI', 'mongodb://localhost:27017'),
         },
     }
 }
-
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True

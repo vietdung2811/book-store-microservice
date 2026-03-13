@@ -37,22 +37,41 @@ def staff_manage_books(request):
         books = []
     return render(request, "manage_books.html", {"books": books})
 
+def add_to_cart(request, book_id):
+    customer_id = 1  # Default for demo
+    if request.method == "POST":
+        data = {
+            "customer_id": customer_id,
+            "book_id": book_id,
+            "quantity": 1
+        }
+        try:
+            requests.post(f"{CART_SERVICE_URL}/cart-items/", json=data, timeout=10)
+        except Exception:
+            pass
+    return redirect('book_list')
+
 def view_cart(request, customer_id):
     try:
-        r = requests.get(f"{CART_SERVICE_URL}/carts/{customer_id}/")
-        items = r.json()
+        r = requests.get(f"{CART_SERVICE_URL}/carts/{customer_id}/", timeout=10)
+        r.raise_for_status()
+        cart_data = r.json()
+        items = cart_data.get('items', [])
+        total_price = sum(float(item['book']['price']) * item['quantity'] for item in items)
     except Exception:
         items = []
-    return render(request, "cart.html", {"items": items, "customer_id": customer_id})
+        total_price = 0
+    return render(request, "cart.html", {"items": items, "total_price": total_price, "customer_id": customer_id})
 
-def create_order(request, customer_id):
+def checkout(request, customer_id):
     if request.method == "POST":
         data = {
             "customer_id": customer_id,
             "total_amount": request.POST.get("total_amount"),
         }
         try:
-            requests.post(f"{ORDER_SERVICE_URL}/orders/", json=data)
+            # Trigger order-service (which calls pay and ship services)
+            requests.post(f"{ORDER_SERVICE_URL}/orders/", json=data, timeout=10)
         except Exception:
             pass
         return redirect('view_cart', customer_id=customer_id)

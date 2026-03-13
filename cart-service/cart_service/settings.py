@@ -77,18 +77,14 @@ WSGI_APPLICATION = 'cart_service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'djongo',
         'NAME': os.environ.get('DB_NAME', 'bookstore'),
-        'USER': os.environ.get('DB_USER', 'bookstore_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'bookstore_password'),
-        'HOST': os.environ.get('DB_HOST', 'db'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': os.environ.get('MONGO_URI', 'mongodb://localhost:27017'),
         },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
