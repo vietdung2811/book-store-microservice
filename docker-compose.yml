@@ -1,87 +1,121 @@
 services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
   customer-service:
     build: ./customer-service
     ports:
       - "8001:8000"
     environment:
-      - DB_NAME=${CUSTOMER_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=customer_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   book-service:
     build: ./book-service
     ports:
       - "8002:8000"
     environment:
-      - DB_NAME=${BOOK_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=book_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   cart-service:
     build: ./cart-service
     ports:
       - "8003:8000"
     environment:
-      - DB_NAME=${CART_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=cart_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   staff-service:
     build: ./staff-service
     ports:
       - "8004:8000"
     environment:
-      - DB_NAME=${STAFF_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=staff_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   manager-service:
     build: ./manager-service
     ports:
       - "8005:8000"
     environment:
-      - DB_NAME=${MANAGER_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=manager_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   catalog-service:
     build: ./catalog-service
     ports:
       - "8006:8000"
     environment:
-      - DB_NAME=${CATALOG_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=catalog_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   order-service:
     build: ./order-service
     ports:
       - "8007:8000"
     environment:
-      - DB_NAME=${ORDER_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=order_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   ship-service:
     build: ./ship-service
     ports:
       - "8008:8000"
     environment:
-      - DB_NAME=${SHIP_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=ship_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   pay-service:
     build: ./pay-service
     ports:
       - "8009:8000"
     environment:
-      - DB_NAME=${PAY_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=pay_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   comment-rate-service:
     build: ./comment-rate-service
     ports:
       - "8010:8000"
     environment:
-      - DB_NAME=${COMMENT_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=comment_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   recommender-ai-service:
     build: ./recommender-ai-service
     ports:
       - "8011:8000"
     environment:
-      - DB_NAME=${RECOMMENDER_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=recommender_db
+      - MONGO_URI=mongodb://mongo:27017/
+    depends_on:
+      - mongo
   api-gateway:
     build: ./api-gateway
     ports:
       - "8000:8000"
     environment:
-      - DB_NAME=${GATEWAY_DB}
-      - MONGO_URI=${MONGO_URI}
+      - DB_NAME=gateway_db
+      - MONGO_URI=mongodb://mongo:27017/
     volumes:
       - ./api-gateway:/app
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data:
