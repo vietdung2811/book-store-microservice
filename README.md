@@ -36,7 +36,7 @@ The system is decomposed into **12 independent microservices**, each with its ow
 
 ### Installation:
 1. Clone the repository and navigate to the root folder.
-2. Build and start all 13 containers (12 services + 1 MongoDB):
+2. Build and start all 13 containers (12 services + 1 MariaDB):
    ```bash
    docker-compose up --build
    ```

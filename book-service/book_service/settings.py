@@ -77,12 +77,12 @@ WSGI_APPLICATION = 'book_service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': os.environ.get('DB_NAME', 'bookstore'),
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': os.environ.get('MONGO_URI', 'mongodb://localhost:27017'),
-        },
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('DB_NAME', 'book_db'),
+        'USER': os.environ.get('DB_USER', 'user'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'password'),
+        'HOST': os.environ.get('DB_HOST', 'mariadb'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
     }
 }
 

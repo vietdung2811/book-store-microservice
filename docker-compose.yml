@@ -1,10 +1,15 @@
 services:
-  mongo:
-    image: mongo:latest
+  mariadb:
+    image: mariadb:latest
+    environment:
+      - MARIADB_ROOT_PASSWORD=rootpassword
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=password
     ports:
-      - "27017:27017"
+      - "3307:3306"
     volumes:
-      - mongo-data:/data/db
+      - mariadb-data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
 
   customer-service:
     build: ./customer-service
@@ -12,110 +17,168 @@ services:
       - "8001:8000"
     environment:
       - DB_NAME=customer_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./customer-service:/app
     depends_on:
-      - mongo
+      - mariadb
   book-service:
     build: ./book-service
     ports:
       - "8002:8000"
     environment:
       - DB_NAME=book_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./book-service:/app
     depends_on:
-      - mongo
+      - mariadb
   cart-service:
     build: ./cart-service
     ports:
       - "8003:8000"
     environment:
       - DB_NAME=cart_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./cart-service:/app
     depends_on:
-      - mongo
+      - mariadb
   staff-service:
     build: ./staff-service
     ports:
       - "8004:8000"
     environment:
       - DB_NAME=staff_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./staff-service:/app
     depends_on:
-      - mongo
+      - mariadb
   manager-service:
     build: ./manager-service
     ports:
       - "8005:8000"
     environment:
       - DB_NAME=manager_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./manager-service:/app
     depends_on:
-      - mongo
+      - mariadb
   catalog-service:
     build: ./catalog-service
     ports:
       - "8006:8000"
     environment:
       - DB_NAME=catalog_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./catalog-service:/app
     depends_on:
-      - mongo
+      - mariadb
   order-service:
     build: ./order-service
     ports:
       - "8007:8000"
     environment:
       - DB_NAME=order_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./order-service:/app
     depends_on:
-      - mongo
+      - mariadb
   ship-service:
     build: ./ship-service
     ports:
       - "8008:8000"
     environment:
       - DB_NAME=ship_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./ship-service:/app
     depends_on:
-      - mongo
+      - mariadb
   pay-service:
     build: ./pay-service
     ports:
       - "8009:8000"
     environment:
       - DB_NAME=pay_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./pay-service:/app
     depends_on:
-      - mongo
+      - mariadb
   comment-rate-service:
     build: ./comment-rate-service
     ports:
       - "8010:8000"
     environment:
       - DB_NAME=comment_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./comment-rate-service:/app
     depends_on:
-      - mongo
+      - mariadb
   recommender-ai-service:
     build: ./recommender-ai-service
     ports:
-      - "8011:8000"
+      - "811:8000"
     environment:
       - DB_NAME=recommender_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+    volumes:
+      - ./recommender-ai-service:/app
     depends_on:
-      - mongo
+      - mariadb
   api-gateway:
     build: ./api-gateway
     ports:
       - "8000:8000"
     environment:
       - DB_NAME=gateway_db
-      - MONGO_URI=mongodb://mongo:27017/
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_HOST=mariadb
+      - DB_PORT=3306
     volumes:
       - ./api-gateway:/app
     depends_on:
-      - mongo
+      - mariadb
 
 volumes:
-  mongo-data:
+  mariadb-data:

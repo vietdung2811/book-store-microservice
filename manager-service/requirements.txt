@@ -1,8 +1,4 @@
-django<5.0
 djangorestframework
 requests
-djongo==1.3.6
-pymongo[srv]==3.12.3
-pytz
-dnspython
-sqlparse==0.2.4
+sqlparse==0.4.4
+mysqlclient

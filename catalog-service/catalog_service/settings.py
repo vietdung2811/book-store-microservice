@@ -48,12 +48,12 @@ WSGI_APPLICATION = 'catalog_service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('DB_NAME', 'catalog_db'),
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': os.environ.get('MONGO_URI', 'mongodb://localhost:27017'),
-        },
+        'USER': os.environ.get('DB_USER', 'user'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'password'),
+        'HOST': os.environ.get('DB_HOST', 'mariadb'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
     }
 }
 LANGUAGE_CODE = 'en-us'
