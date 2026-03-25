@@ -6,9 +6,6 @@ import time
 CUSTOMER_SERVICE_URL = "http://customer-service:8000"
 BOOK_SERVICE_URL = "http://book-service:8000"
 CART_SERVICE_URL = "http://cart-service:8000"
-STAFF_SERVICE_URL = "http://staff-service:8000"
-MANAGER_SERVICE_URL = "http://manager-service:8000"
-CATALOG_SERVICE_URL = "http://catalog-service:8000"
 ORDER_SERVICE_URL = "http://order-service:8000"
 
 def post_data(service_url, endpoint, data):
@@ -18,6 +15,9 @@ def post_data(service_url, endpoint, data):
         r = requests.post(url, json=data, timeout=30)
         r.raise_for_status()
         print(f"Success: {r.json()}")
+        return r.json()
+    except requests.exceptions.HTTPError as e:
+        print(f"Validation Error: {r.json()}")
         return r.json()
     except Exception as e:
         print(f"Error: {e}")
@@ -29,17 +29,7 @@ def seed():
     # Wait for services to be ready
     time.sleep(10)
 
-    # 1. Seed Categories
-    categories = [
-        {"name": "Science Fiction", "description": "Books about futuristic science and technology."},
-        {"name": "Fantasy", "description": "Books featuring magical elements and mythical creatures."},
-        {"name": "Mystery", "description": "Books focused on solving crimes or puzzles."},
-        {"name": "Non-Fiction", "description": "Educational and real-world books."}
-    ]
-    for category in categories:
-        post_data(CATALOG_SERVICE_URL, "categories/", category)
-
-    # 2. Seed Books
+    # 1. Seed Books
     books = [
         {"title": "Dune", "author": "Frank Herbert", "price": 15.99, "stock": 100},
         {"title": "The Hobbit", "author": "J.R.R. Tolkien", "price": 12.50, "stock": 50},
@@ -50,35 +40,30 @@ def seed():
     for book in books:
         res = post_data(BOOK_SERVICE_URL, "books/", book)
 
-    # 3. Seed Customers
+    # 2. Seed Customers
     customers = [
-        {"name": "John Doe", "email": "john@example.com"},
-        {"name": "Jane Smith", "email": "jane@example.com"},
-        {"name": "Bob Johnson", "email": "bob@example.com"}
+        {"name": "John Doe", "email": "john@example.com", "password": "password123"},
+        {"name": "Jane Smith", "email": "jane@example.com", "password": "password123"},
+        {"name": "Bob Johnson", "email": "bob@example.com", "password": "password123"}
     ]
     customer_ids = []
     for customer in customers:
         res = post_data(CUSTOMER_SERVICE_URL, "customers/", customer)
-        if res:
+        if res and res.get("id"):
             customer_ids.append(res.get("id"))
-            
-    # 4. Seed Staff
-    staff = [
-        {"name": "Alice", "role": "Cashier", "email": "alice@example.com"},
-        {"name": "Charlie", "role": "Stocker", "email": "charlie@example.com"},
-    ]
-    for s in staff:
-        post_data(STAFF_SERVICE_URL, "staff/", s)
+        else:
+            # Try to fetch existing customer by email
+            try:
+                r = requests.get(f"{CUSTOMER_SERVICE_URL}/customers/", timeout=10)
+                if r.status_code == 200:
+                    for existing in r.json():
+                        if existing['email'] == customer['email']:
+                            customer_ids.append(existing['id'])
+                            break
+            except Exception:
+                pass
 
-    # 5. Seed Manager
-    managers = [
-        {"name": "Eve", "department": "Sales", "email": "eve@example.com"},
-        {"name": "Mallory", "department": "Inventory", "email": "mallory@example.com"},
-    ]
-    for m in managers:
-        post_data(MANAGER_SERVICE_URL, "managers/", m)
-
-    # 6. Add books to cart
+    # 3. Add books to cart
     if len(customer_ids) >= 2:
         cart_items = [
             {"customer_id": customer_ids[0], "book_id": 1, "quantity": 2},
@@ -92,7 +77,9 @@ def seed():
             except Exception:
                 pass # This view redirects, so we can ignore the response
 
-    # 7. Seed Orders
+    # 4. Seed Orders
+    # Filter out None and ensure we have enough IDs
+    customer_ids = [cid for cid in customer_ids if cid]
     if len(customer_ids) >= 2:
         orders = [
             {"customer_id": customer_ids[0], "total_amount": "31.98", "status": "Shipped"},

@@ -24,8 +24,13 @@
         <div class="logo">📚 My Bookstore</div>
         <div class="nav-links">
             <a href="{% url 'book_list' %}">Shop</a>
-            <a href="{% url 'view_cart' 1 %}">🛒 Cart</a>
-            <a href="{% url 'staff_manage_books' %}">Staff Dashboard</a>
+            {% if customer %}
+                <a href="{% url 'view_cart' %}">🛒 Cart ({{ customer.name }})</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+            
         </div>
     </div>
 

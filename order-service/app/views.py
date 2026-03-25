@@ -7,6 +7,8 @@ import requests
 PAY_SERVICE_URL = "http://pay-service:8000"
 SHIP_SERVICE_URL = "http://ship-service:8000"
 
+from rest_framework import status
+
 class OrderCreate(APIView):
     def post(self, request):
         serializer = OrderSerializer(data=request.data)
@@ -31,8 +33,8 @@ class OrderCreate(APIView):
             except Exception:
                 pass
 
-            return Response(serializer.data)
-        return Response(serializer.errors)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class OrderDetail(APIView):
     def get(self, request, pk):

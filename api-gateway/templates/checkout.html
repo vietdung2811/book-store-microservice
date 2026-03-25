@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Shopping Cart</title>
+    <title>Checkout</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; }
         .navbar { background-color: #2c3e50; padding: 1rem; color: white; display: flex; justify-content: space-between; align-items: center; }
         .navbar a { color: white; text-decoration: none; margin-left: 1rem; }
         .container { max-width: 800px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #ecf0f1; }
         .item:last-child { border-bottom: none; }
         .total { margin-top: 2rem; text-align: right; font-size: 1.5rem; font-weight: bold; color: #2c3e50; }
-        .btn { background-color: #2ecc71; color: white; border: none; padding: 1rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; display: block; width: 100%; text-align: center; margin-top: 1rem; font-size: 1.1rem; }
+        .btn { background-color: #2ecc71; color: white; border: none; padding: 1rem 2rem; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; margin-top: 1rem; font-size: 1.1rem; }
         .btn:hover { background-color: #27ae60; }
-        .btn-secondary { background-color: #bdc3c7; color: #34495e; }
-        .btn-secondary:hover { background-color: #95a5a6; }
+        .btn-secondary { background-color: #3498db; }
+        .btn-secondary:hover { background-color: #2980b9; }
     </style>
 </head>
 <body>
@@ -27,12 +28,11 @@
             {% else %}
                 <a href="{% url 'login' %}">Login</a>
             {% endif %}
-            
         </div>
     </div>
 
     <div class="container">
-        <h1>Your Shopping Cart</h1>
+        <h1>Review Your Order</h1>
         {% if items %}
             <div class="items">
                 {% for item in items %}
@@ -49,11 +49,7 @@
             <form action="{% url 'checkout' customer_id %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="total_amount" value="{{ total_price }}">
-                <button type="submit" class="btn">Proceed to Checkout</button>
-            </form>
-            <form action="{% url 'delete_cart' customer_id %}" method="post" style="margin-top: 1rem;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-secondary" style="background-color: #e74c3c; width: 100%;">Discard Cart</button>
+                <button type="submit" class="btn">Confirm Purchase</button>
             </form>
         {% else %}
             <p>Your cart is empty.</p>
