@@ -116,6 +116,24 @@ def checkout(request, customer_id):
         "customer": request.session.get('customer')
     })
 
+def my_orders(request):
+    customer = request.session.get('customer')
+    if not customer:
+        return redirect('login')
+
+    customer_id = customer['id']
+    orders = []
+    try:
+        r = requests.get(f"{ORDER_SERVICE_URL}/orders/customer/{customer_id}/", timeout=10)
+        r.raise_for_status()
+        orders = r.json()
+    except Exception as e:
+        print(f"Error fetching orders for customer {customer_id}: {e}")
+        # Handle error, maybe show an empty list or an error message on the page
+    
+    return render(request, "orders.html", {"orders": orders, "customer": customer})
+
+
 def order_confirmation(request):
     return render(request, "order_confirmation.html", {"customer": request.session.get('customer')})
 

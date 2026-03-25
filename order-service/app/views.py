@@ -44,3 +44,9 @@ class OrderDetail(APIView):
             return Response(serializer.data)
         except Order.DoesNotExist:
             return Response({"error": "Order not found"}, status=404)
+
+class CustomerOrderList(APIView):
+    def get(self, request, customer_id):
+        orders = Order.objects.filter(customer_id=customer_id)
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)

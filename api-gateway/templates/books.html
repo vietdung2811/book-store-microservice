@@ -1,39 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Bookstore Storefront</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; }
-        .navbar { background-color: #2c3e50; padding: 1rem; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .navbar a { color: white; text-decoration: none; margin-left: 1rem; }
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem; }
-        .card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); }
-        .card h3 { margin-top: 0; color: #2c3e50; }
-        .card .author { color: #7f8c8d; font-size: 0.9rem; }
-        .card .price { font-size: 1.25rem; font-weight: bold; color: #e74c3c; margin: 1rem 0; }
-        .btn { background-color: #3498db; color: white; border: none; padding: 0.75rem 1rem; border-radius: 4px; cursor: pointer; text-decoration: none; text-align: center; }
-        .btn:hover { background-color: #2980b9; }
-        .btn-cart { background-color: #27ae60; }
-        .btn-cart:hover { background-color: #219150; }
-    </style>
-</head>
-<body>
-    <div class="navbar">
-        <div class="logo">📚 My Bookstore</div>
-        <div class="nav-links">
-            <a href="{% url 'book_list' %}">Shop</a>
-            {% if customer %}
-                <a href="{% url 'view_cart' %}">🛒 Cart ({{ customer.name }})</a>
-                <a href="{% url 'logout' %}">Logout</a>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-            {% endif %}
-            
-        </div>
-    </div>
+{% extends 'base.html' %}
 
+{% block title %}Bookstore Storefront{% endblock %}
+
+{% block content %}
     <div class="container">
         <h1>Explore Our Collection</h1>
         <div class="grid">
@@ -54,5 +23,4 @@
             {% endfor %}
         </div>
     </div>
-</body>
-</html>
+{% endblock %}
